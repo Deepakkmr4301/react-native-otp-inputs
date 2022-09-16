@@ -69,7 +69,7 @@ const OtpInputs = forwardRef<OtpInputsRef, Props>(
       inputStyles,
       isRTL = false,
       keyboardType = 'phone-pad',
-      numberOfInputs = 4,
+      numberOfInputs = 6,
       placeholder = '',
       secureTextEntry = false,
       selectTextOnFocus = true,
@@ -118,6 +118,8 @@ const OtpInputs = forwardRef<OtpInputsRef, Props>(
     );
 
     const handleInputTextChange = (text: string, index: number): void => {
+      const pattern = /^[0-9]$/;
+      let isValid = pattern.test(text);
       if (!text.length) {
         handleClearInput(index);
       }
@@ -127,18 +129,29 @@ const OtpInputs = forwardRef<OtpInputsRef, Props>(
         Keyboard.dismiss();
         return fillInputs(text);
       }
-
-      if (text) {
+      if (!isValid) {
+        const input = inputs.current[index];
+        input?.current?.clear();
         dispatch({
           type: 'setOtpTextForIndex',
           payload: {
-            text,
-            index,
+            index: index,
+            text: '',
           },
         });
-        focusInput(index + 1);
       }
-
+      else {
+        if (text) {
+          dispatch({
+            type: 'setOtpTextForIndex',
+            payload: {
+              text,
+              index,
+            },
+          });
+          focusInput(index + 1);
+        }
+      }
       if (index === numberOfInputs - 1 && text) {
         Keyboard.dismiss();
       }
@@ -277,6 +290,7 @@ const OtpInputs = forwardRef<OtpInputsRef, Props>(
       });
     };
 
+    // @ts-expect-error
     return <View style={style || styles.container}>{renderInputs()}</View>;
   },
 );
