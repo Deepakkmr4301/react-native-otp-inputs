@@ -63,7 +63,7 @@ const OtpInput = forwardRef<TextInput, Props>(
 
     return (
       // @ts-expect-error
-      <View style={[inputContainerStyles, focused && focusStyles]}>
+      <View style={[inputContainerStyles]}>
         {/* @ts-expect-error */}
         <TextInput
           autoFocus={autoFocus}
@@ -78,7 +78,7 @@ const OtpInput = forwardRef<TextInput, Props>(
             ios: selectTextOnFocus,
             android: true,
           })}
-          style={inputStyles}
+          style={[inputStyles, focused && focusStyles]}
           importantForAutofill={'no'}
           autoCorrect={false}
           autoComplete={'off'}
